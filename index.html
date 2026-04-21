@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apéro entre voisins</title>
+  <meta
+    name="description"
+    content="Un site convivial pour proposer un apéro entre voisins et faire connaissance simplement."
+  />
+  <style>
+    :root {
+      --bg-1: #14041f;
+      --bg-2: #2b0f46;
+      --bg-3: #ff4f87;
+      --bg-4: #ffb347;
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.8);
+      --card: rgba(255, 255, 255, 0.1);
+      --card-border: rgba(255, 255, 255, 0.2);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+      --radius: 26px;
+      --transition: 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 179, 71, 0.24), transparent 20%),
+        radial-gradient(circle at 85% 15%, rgba(255, 79, 135, 0.25), transparent 25%),
+        radial-gradient(circle at 80% 80%, rgba(143, 91, 255, 0.30), transparent 24%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 50%, #201149 75%, #401154);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      z-index: 0;
+      pointer-events: none;
+      animation: floatBlob 10s ease-in-out infinite;
+    }
+
+    body::before {
+      top: 5%;
+      left: -100px;
+      background: linear-gradient(135deg, #ff4f87, #ffb347);
+    }
+
+    body::after {
+      right: -100px;
+      bottom: 5%;
+      background: linear-gradient(135deg, #8f5bff, #ff4f87);
+      animation-delay: -4s;
+    }
+
+    @keyframes floatBlob {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-18px) scale(1.05); }
+    }
+
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .sparkles span {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.55);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.65);
+      animation: sparkle 8s linear infinite;
+    }
+
+    .sparkles span:nth-child(1) { top: 12%; left: 8%; animation-delay: 0s; }
+    .sparkles span:nth-child(2) { top: 20%; left: 74%; animation-delay: 2s; width: 7px; height: 7px; }
+    .sparkles span:nth-child(3) { top: 45%; left: 14%; animation-delay: 1s; width: 8px; height: 8px; }
+    .sparkles span:nth-child(4) { top: 60%; left: 84%; animation-delay: 3s; }
+    .sparkles span:nth-child(5) { top: 76%; left: 30%; animation-delay: 4.5s; width: 6px; height: 6px; }
+    .sparkles span:nth-child(6) { top: 86%; left: 62%; animation-delay: 1.5s; width: 9px; height: 9px; }
+
+    @keyframes sparkle {
+      0%, 100% { transform: translateY(0) scale(0.8); opacity: 0.25; }
+      50% { transform: translateY(-12px) scale(1.15); opacity: 1; }
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+      padding: 24px 0;
+    }
+
+    .hero__card {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: stretch;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .hero__content,
+    .hero__side {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 28px;
+      padding: 28px;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.9);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      margin-bottom: 18px;
+      max-width: 12ch;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff, #ffd2df, #ffcb7a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: clamp(1rem, 2.3vw, 1.14rem);
+      line-height: 1.75;
+      max-width: 58ch;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .button,
+    .contact-link,
+    .mini-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      color: white;
+      font-weight: 800;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.18);
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+      cursor: pointer;
+      isolation: isolate;
+    }
+
+    .button::before,
+    .contact-link::before,
+    .mini-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0));
+      transform: translateX(-100%);
+      transition: transform 0.45s ease;
+      z-index: -1;
+    }
+
+    .button:hover::before,
+    .contact-link:hover::before,
+    .mini-btn:hover::before {
+      transform: translateX(0);
+    }
+
+    .button:hover,
+    .contact-link:hover,
+    .mini-btn:hover {
+      transform: translateY(-3px) scale(1.015);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.28);
+      border-color: rgba(255,255,255,0.34);
+    }
+
+    .button:active,
+    .contact-link:active,
+    .mini-btn:active {
+      transform: translateY(0) scale(0.985);
+    }
+
+    .button.primary {
+      padding: 16px 22px;
+      background: linear-gradient(135deg, #ff4f87, #ffb347);
+      box-shadow: 0 12px 30px rgba(255, 108, 130, 0.35);
+    }
+
+    .button.secondary {
+      padding: 16px 22px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .hero__side {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .info-box {
+      border-radius: 22px;
+      padding: 22px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .info-box h2 {
+      font-size: 1.12rem;
+      margin-bottom: 10px;
+    }
+
+    .info-box p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .address-line {
+      display: inline-block;
+      margin-top: 12px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 14px;
+      padding: 10px 14px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .contact-card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .contact-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255,255,255,0.34);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.34);
+    }
+
+    .contact-card::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      right: -60px;
+      top: -60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, rgba(255,79,135,0.95), rgba(255,179,71,0.95));
+      box-shadow: 0 12px 24px rgba(255, 102, 140, 0.25);
+    }
+
+    .contact-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+    }
+
+    .contact-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .contact-value {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      word-break: break-word;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .contact-link {
+      min-height: 50px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.1);
+      flex: 1 1 180px;
+    }
+
+    .contact-link.primary {
+      background: linear-gradient(135deg, #ff4f87, #ffb347);
+    }
+
+    .section-note {
+      margin-top: 30px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: var(--muted);
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: rgba(255,255,255,0.68);
+      font-size: 0.95rem;
+      padding-bottom: 18px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(15, 8, 30, 0.92);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 999px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .floating-actions {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 40;
+    }
+
+    .mini-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #ff4f87, #ffb347);
+      box-shadow: 0 12px 24px rgba(255, 102, 140, 0.28);
+      font-size: 1.2rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        min-height: auto;
+      }
+
+      .hero__card {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 20px, 1120px);
+      }
+
+      .hero__card,
+      .hero__content,
+      .hero__side,
+      .contact-card {
+        border-radius: 22px;
+      }
+
+      .hero__card {
+        padding: 12px;
+      }
+
+      .hero__content,
+      .hero__side,
+      .contact-card {
+        padding: 20px;
+      }
+
+      .button,
+      .contact-link {
+        width: 100%;
+      }
+
+      .cta-row,
+      .contact-actions {
+        flex-direction: column;
+      }
+
+      .floating-actions {
+        display: flex;
+      }
+
+      .contact-link {
+        flex: initial;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkles" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero__card reveal">
+        <div class="hero__content">
+          <div class="badge">🍹 Apéro entre voisins</div>
+
+          <h1>
+            Et si on faisait
+            <span class="gradient-text">connaissance</span>
+            autour d’un verre ?
+          </h1>
+
+          <p>
+            Bonjour voisinage 👋<br><br>
+            J’avais envie de proposer un moment simple et sympa pour se rencontrer entre voisins,
+            discuter un peu et partager un apéro dans une ambiance détendue.<br><br>
+            L’idée est juste de faire connaissance, passer un bon moment et créer un peu de lien
+            dans le quartier.
+          </p>
+
+          <div class="cta-row">
+            <a href="#contact" class="button primary">Me contacter</a>
+            <a href="mailto:tonadresse@email.com?subject=Ap%C3%A9ro%20entre%20voisins" class="button secondary">
+              Envoyer un e-mail
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero__side">
+          <div class="info-box">
+            <h2>📍 Où ça ?</h2>
+            <p>
+              Ce petit apéro se passe simplement chez moi, dans une ambiance conviviale et sans prise de tête.
+            </p>
+            <div class="address-line">12 rue des Voisins, 75000 Paris</div>
+          </div>
+
+          <div class="info-box">
+            <h2>✨ L’idée</h2>
+            <p>
+              Faire connaissance entre voisins, mettre des visages sur des prénoms,
+              échanger quelques mots et partager un moment chaleureux autour d’un verre.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-grid">
+      <article class="contact-card reveal">
+        <div class="icon">✉️</div>
+        <h3>Par e-mail</h3>
+        <p>
+          Si vous préférez m’écrire, vous pouvez m’envoyer un message directement par mail.
+        </p>
+        <div class="contact-value">tonadresse@email.com</div>
+        <div class="contact-actions">
+          <a
+            class="contact-link primary"
+            href="mailto:tonadresse@email.com?subject=Ap%C3%A9ro%20entre%20voisins&body=Bonjour,%0A%0AMerci%20pour%20l%E2%80%99invitation.%20Je%20vous%20contacte%20pour%20l%E2%80%99ap%C3%A9ro%20entre%20voisins.%0A%0A%C3%80%20bient%C3%B4t%20!"
+          >
+            Envoyer un e-mail
+          </a>
+          <button class="contact-link" data-copy="tonadresse@email.com">
+            Copier l’e-mail
+          </button>
+        </div>
+      </article>
+
+      <article class="contact-card reveal">
+        <div class="icon">📱</div>
+        <h3>Par téléphone</h3>
+        <p>
+          Vous pouvez aussi me joindre facilement par téléphone ou m’envoyer un petit SMS.
+        </p>
+        <div class="contact-value">06 12 34 56 78</div>
+        <div class="contact-actions">
+          <a class="contact-link primary" href="tel:+33612345678">Appeler</a>
+          <a class="contact-link" href="sms:+33612345678?body=Bonjour,%20je%20vous%20contacte%20pour%20l%E2%80%99ap%C3%A9ro%20entre%20voisins%20%F0%9F%8D%B9">
+            Envoyer un SMS
+          </a>
+          <button class="contact-link" data-copy="06 12 34 56 78">
+            Copier le numéro
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <div class="section-note reveal">
+      N’hésitez pas à me contacter si l’idée vous plaît. Ce sera l’occasion de se rencontrer tout simplement autour d’un apéro entre voisins.
+    </div>
+
+    <footer class="footer reveal">
+      À bientôt autour d’un verre 🍹
+    </footer>
+  </main>
+
+  <div class="floating-actions" aria-label="Actions rapides">
+    <a href="tel:+33612345678" class="mini-btn" aria-label="Appeler">📞</a>
+    <a href="sms:+33612345678" class="mini-btn" aria-label="SMS">💬</a>
+    <a href="mailto:tonadresse@email.com" class="mini-btn" aria-label="E-mail">✉️</a>
+  </div>
+
+  <div class="toast" id="toast">Copié dans le presse-papiers</div>
+
+  <script>
+    const revealElements = document.querySelectorAll(".reveal");
+    const toast = document.getElementById("toast");
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    revealElements.forEach((el) => observer.observe(el));
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
+    }
+
+    document.querySelectorAll("[data-copy]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const text = button.getAttribute("data-copy");
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast("Copié : " + text);
+        } catch (error) {
+          showToast("Impossible de copier automatiquement");
+        }
+      });
+    });
+
+    document.querySelectorAll(".contact-card").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        if (window.innerWidth < 900) return;
+
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const rotateY = ((x / rect.width) - 0.5) * 8;
+        const rotateX = ((y / rect.height) - 0.5) * -8;
+
+        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+      });
+    });
+  </script>
+</body>
+</html>
