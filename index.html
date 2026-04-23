@@ -6,95 +6,179 @@
   <title>La Tour de Gustave Eiffel</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --panel-2: #1f2937;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #f59e0b;
-      --border: rgba(255,255,255,.08);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --bg: #f4f1ea;
+      --bg-soft: #ebe5d8;
+      --panel: #fcfbf8;
+      --panel-2: #f7f3eb;
+      --text: #352f2a;
+      --muted: #7f7669;
+      --accent: #b58d3d;
+      --accent-dark: #8a6a2c;
+      --line: #dfd4c1;
+      --shadow: 0 12px 28px rgba(85, 62, 20, 0.08);
+      --shadow-soft: 0 6px 16px rgba(85, 62, 20, 0.06);
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: Inter, Arial, sans-serif; background: linear-gradient(180deg, #0b1220 0%, #111827 100%); color: var(--text); }
-    .app { display:grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
-    aside { background: rgba(15,23,42,.92); border-right: 1px solid var(--border); padding: 18px; position: sticky; top:0; height:100vh; overflow:auto; }
-    main { padding: 18px; }
-    h1 { margin: 0 0 8px; font-size: 1.35rem; line-height: 1.25; }
-    .muted { color: var(--muted); font-size: .95rem; }
-    .toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin: 16px 0 18px; }
-    input[type='search'], input[type='number'] { background: var(--panel-2); color: var(--text); border:1px solid var(--border); border-radius: 12px; padding: 10px 12px; }
-    button, .btn { border:1px solid var(--border); background: var(--panel-2); color: var(--text); border-radius: 12px; padding: 10px 14px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
-    button:hover, .btn:hover { border-color: rgba(245,158,11,.45); }
-    .btn-primary { background: var(--accent); color: #111827; font-weight: 700; }
-    .thumbs { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px; margin-top:16px; }
-    .thumb { border:1px solid var(--border); border-radius: 14px; overflow:hidden; background: rgba(255,255,255,.02); cursor:pointer; }
-    .thumb.active { outline:2px solid var(--accent); }
-    .thumb img { width:100%; display:block; aspect-ratio: 0.72; object-fit:cover; background:#0b1220; }
-    .thumb .cap { padding:8px 10px; font-size: .85rem; color: var(--muted); }
-    .viewer-card { background: rgba(15,23,42,.55); border:1px solid var(--border); border-radius: 24px; padding: 18px; box-shadow: var(--shadow); }
-    .viewer-top { display:flex; justify-content:space-between; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom: 12px; }
-    .viewer-top h2 { margin:0; font-size:1.1rem; }
-    .stage { overflow:auto; background: rgba(255,255,255,.03); border-radius: 18px; padding: 18px; text-align:center; min-height: 70vh; }
-    .page-img { max-width:100%; height:auto; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.45); transform-origin: top center; transition: transform .15s ease; }
-    .bottom-panel { display:grid; grid-template-columns: 1.2fr .8fr; gap:16px; margin-top:16px; }
-    .panel { background: rgba(255,255,255,.03); border:1px solid var(--border); border-radius: 18px; padding: 16px; }
-    .panel h3 { margin:0 0 10px; font-size: 1rem; }
-    #pageText { white-space: pre-wrap; line-height: 1.5; color: #e5e7eb; max-height: 250px; overflow:auto; }
-    #results { display:flex; flex-direction:column; gap:8px; max-height: 300px; overflow:auto; }
-    .result { padding:10px 12px; border-radius:12px; background: rgba(255,255,255,.04); cursor:pointer; border:1px solid transparent; }
-    .result:hover { border-color: rgba(245,158,11,.35); }
-    .kbd { font: inherit; padding: 2px 7px; border:1px solid var(--border); border-bottom-width:2px; border-radius:8px; background:#0b1220; color:var(--muted); }
-    @media (max-width: 980px) {
-      .app { grid-template-columns: 1fr; }
-      aside { position: relative; height:auto; border-right:0; border-bottom:1px solid var(--border); }
-      .bottom-panel { grid-template-columns: 1fr; }
-      .thumbs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(181,141,61,.10), transparent 24%),
+        linear-gradient(180deg, #f8f5ef 0%, var(--bg) 55%, #f1ece3 100%);
     }
-    @media (max-width: 640px) {
+    .app { min-height: 100vh; display: grid; grid-template-columns: 340px 1fr; }
+    aside {
+      position: sticky; top: 0; height: 100vh; overflow: auto;
+      background: rgba(248,245,239,.92);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid var(--line);
+      padding: 26px 20px;
+    }
+    main { padding: 24px; }
+    .brand {
+      border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(247,243,235,.9));
+      padding: 20px; box-shadow: var(--shadow-soft); margin-bottom: 18px;
+    }
+    .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .72rem; color: var(--accent-dark); font-weight: 700; }
+    h1 { margin: 10px 0 8px; font-size: 1.85rem; line-height: 1.1; }
+    .muted { color: var(--muted); }
+    .search-wrap { margin: 18px 0 14px; position: relative; }
+    input[type='search'], input[type='number'] {
+      width: 100%; border: 1px solid var(--line); border-radius: 16px; background: #fff; color: var(--text);
+      padding: 13px 14px; font-size: .98rem; outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    input[type='search']:focus, input[type='number']:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(181,141,61,.12); }
+    .tip {
+      margin: 12px 0 16px; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 16px; color: var(--muted); background: rgba(255,255,255,.5);
+    }
+    .kbd { display: inline-block; min-width: 26px; text-align: center; padding: 4px 7px; border-radius: 10px; border:1px solid var(--line); background: #fff; color: var(--accent-dark); font-weight: 700; }
+    .thumbs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .thumb {
+      cursor: pointer; overflow: hidden; border-radius: 18px; background: var(--panel); border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft); transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .thumb:hover { transform: translateY(-2px); border-color: rgba(181,141,61,.75); }
+    .thumb.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(181,141,61,.16), var(--shadow-soft); }
+    .thumb img { width: 100%; display: block; aspect-ratio: 0.72; object-fit: cover; background: #f0eadf; }
+    .cap { padding: 9px 11px 10px; font-size: .9rem; color: var(--muted); }
+
+    .shell {
+      border: 1px solid var(--line); border-radius: 30px; background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,245,239,.92));
+      overflow: hidden; box-shadow: var(--shadow);
+    }
+    .topbar {
+      padding: 18px 22px; border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.8), rgba(247,243,235,.92));
+    }
+    .topbar-row { display: flex; gap: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    .title-wrap h2 { margin: 0; font-size: 1.4rem; }
+    .title-wrap p { margin: 5px 0 0; color: var(--muted); }
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    button, .btn {
+      border: 1px solid var(--line); background: #fff; color: var(--text); border-radius: 16px; padding: 11px 14px;
+      cursor: pointer; text-decoration: none; font: inherit; box-shadow: var(--shadow-soft);
+    }
+    button:hover, .btn:hover { border-color: var(--accent); }
+    .btn-primary { background: linear-gradient(180deg, #c49a46, var(--accent)); color: #fff; border-color: var(--accent-dark); }
+    .page-jump { display: inline-flex; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.72); }
+    .page-jump input { width: 78px; padding: 8px 10px; }
+
+    .viewer-zone { padding: 24px; }
+    .stage {
+      position: relative; min-height: 72vh; border-radius: 26px; border: 1px solid #eadfcf;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.74), rgba(248,244,236,.95)),
+        repeating-linear-gradient(0deg, rgba(181,141,61,.035) 0, rgba(181,141,61,.035) 1px, transparent 1px, transparent 36px),
+        repeating-linear-gradient(90deg, rgba(181,141,61,.025) 0, rgba(181,141,61,.025) 1px, transparent 1px, transparent 36px);
+      overflow: auto; text-align: center; padding: 26px;
+    }
+    .stage::before {
+      content: ''; position: absolute; inset: 18px; border: 1px solid rgba(181,141,61,.16); border-radius: 20px; pointer-events: none;
+    }
+    .page-img {
+      position: relative; z-index: 1; max-width: min(100%, 1100px); height: auto; background: white; border-radius: 10px;
+      box-shadow: 0 22px 50px rgba(86, 68, 29, .16); transform-origin: top center; transition: transform .15s ease;
+    }
+    .meta-panels { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; padding: 0 24px 24px; }
+    .panel {
+      border: 1px solid var(--line); border-radius: 22px; padding: 18px; background: rgba(255,255,255,.62); box-shadow: var(--shadow-soft);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 1.02rem; }
+    #pageText, #results { max-height: 280px; overflow: auto; }
+    #pageText { white-space: pre-wrap; line-height: 1.58; }
+    .result {
+      padding: 11px 12px; border-radius: 14px; background: rgba(255,255,255,.72); border: 1px solid transparent; cursor: pointer; margin-bottom: 8px;
+    }
+    .result:hover { border-color: rgba(181,141,61,.55); }
+    .empty { color: var(--muted); }
+    .status { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; background: rgba(181,141,61,.10); color: var(--accent-dark); font-weight: 700; }
+    mark { background: rgba(197, 160, 82, .24); color: inherit; padding: 0 .15em; border-radius: .2em; }
+
+    @media (max-width: 1080px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      .meta-panels { grid-template-columns: 1fr; }
+      .thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      main { padding: 14px; }
+      .viewer-zone, .meta-panels, .topbar { padding-left: 14px; padding-right: 14px; }
       .thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      h1 { font-size: 1.55rem; }
     }
   </style>
 </head>
 <body>
   <div class="app">
     <aside>
-      <h1>La Tour de Gustave Eiffel</h1>
-      <div class="muted"><span id="pageCount"></span> pages · visionneuse HTML interactive</div>
-      <div class="toolbar">
-        <input id="searchInput" type="search" placeholder="Rechercher dans le texte…" />
+      <div class="brand">
+        <div class="eyebrow">Visionneuse documentaire</div>
+        <h1>La Tour de Gustave Eiffel</h1>
+        <div class="muted"><span id="pageCount"></span> pages · interface aux couleurs de votre charte</div>
+        <div class="search-wrap"><input id="searchInput" type="search" placeholder="Rechercher dans le texte…" /></div>
+        <div class="tip">Navigation : <span class="kbd">←</span> <span class="kbd">→</span> pour changer de page, <span class="kbd">+</span> <span class="kbd">−</span> pour zoomer.</div>
+        <div class="status" id="statusBadge">Chargement…</div>
       </div>
-      <div class="muted">Astuce : touches <span class="kbd">←</span> <span class="kbd">→</span> pour naviguer, <span class="kbd">+</span> <span class="kbd">-</span> pour zoomer.</div>
       <div id="thumbs" class="thumbs"></div>
     </aside>
+
     <main>
-      <div class="viewer-card">
-        <div class="viewer-top">
-          <div>
-            <h2 id="pageTitle">Page</h2>
-            <div class="muted" id="pageMeta"></div>
-          </div>
-          <div class="toolbar">
-            <button id="prevBtn">← Précédent</button>
-            <button id="nextBtn">Suivant →</button>
-            <label class="btn">Page <input id="pageInput" type="number" min="1" style="width:72px;margin-left:8px"></label>
-            <button id="zoomOutBtn">− Zoom</button>
-            <button id="zoomInBtn">＋ Zoom</button>
-            <button id="fitBtn">Ajuster</button>
-            <a class="btn btn-primary" href="histoire_tour.pdf" download>Télécharger le PDF</a>
+      <div class="shell">
+        <div class="topbar">
+          <div class="topbar-row">
+            <div class="title-wrap">
+              <h2 id="pageTitle">Document</h2>
+              <p id="pageMeta">Page 1</p>
+            </div>
+            <div class="controls">
+              <button id="prevBtn">← Précédent</button>
+              <button id="nextBtn">Suivant →</button>
+              <label class="page-jump">Page <input id="pageInput" type="number" min="1"></label>
+              <button id="zoomOutBtn">− Zoom</button>
+              <button id="zoomInBtn">+ Zoom</button>
+              <button id="fitBtn">Ajuster</button>
+              <a class="btn btn-primary" href="histoire_tour.pdf" download>Télécharger le PDF</a>
+            </div>
           </div>
         </div>
-        <div class="stage" id="stage">
-          <img id="pageImage" class="page-img" alt="Page du document" />
+
+        <div class="viewer-zone">
+          <div class="stage" id="stage">
+            <img id="pageImage" class="page-img" alt="Page du document" />
+          </div>
         </div>
-        <div class="bottom-panel">
+
+        <div class="meta-panels">
           <section class="panel">
             <h3>Texte extrait</h3>
-            <div id="pageText">Aucun texte disponible pour cette page.</div>
+            <div id="pageText" class="empty">Aucun texte disponible pour cette page.</div>
           </section>
           <section class="panel">
             <h3>Résultats de recherche</h3>
-            <div id="results"><div class="muted">Tape un mot ou une expression pour retrouver une page.</div></div>
+            <div id="results" class="empty">Tapez un mot ou une expression pour retrouver rapidement une page.</div>
           </section>
         </div>
       </div>
@@ -107,11 +191,17 @@ let current = 1;
 let zoom = 1;
 const $ = (id) => document.getElementById(id);
 
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function updateStatus(text) { $('statusBadge').textContent = text; }
+
 function renderThumbs() {
   const thumbs = $('thumbs');
   thumbs.innerHTML = data.pages.map(p => `
     <div class="thumb ${p.num===current?'active':''}" data-page="${p.num}">
-      <img loading="lazy" src="${p.img}" alt="Miniature page ${p.num}">
+      <img loading="lazy" src="${p.thumb}" alt="Miniature page ${p.num}">
       <div class="cap">Page ${p.num}</div>
     </div>
   `).join('');
@@ -119,65 +209,94 @@ function renderThumbs() {
 }
 
 function renderPage() {
-  const page = data.pages[current-1];
+  const page = data.pages[current - 1];
   $('pageTitle').textContent = data.title;
   $('pageMeta').textContent = `Page ${page.num} sur ${data.pageCount}`;
   $('pageInput').value = page.num;
-  $('pageImage').src = page.img;
-  $('pageImage').style.transform = `scale(${zoom})`;
   $('pageText').textContent = page.text || 'Aucun texte disponible pour cette page.';
+  const img = $('pageImage');
+  img.src = page.img;
+  img.style.transform = `scale(${zoom})`;
   document.title = `${data.title} - Page ${page.num}`;
+  updateStatus(`Page ${page.num} / ${data.pageCount}`);
   renderThumbs();
-  document.querySelector(`[data-page="${page.num}"]`)?.scrollIntoView({block:'nearest', behavior:'smooth'});
+  document.querySelector(`[data-page="${page.num}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', page.num);
+  history.replaceState({}, '', url);
 }
 
 function goTo(n) {
-  if (n < 1 || n > data.pageCount) return;
+  if (!data || n < 1 || n > data.pageCount) return;
   current = n;
   renderPage();
 }
 
-function search(q) {
-  const results = $('results');
-  q = q.trim().toLowerCase();
-  if (!q) {
-    results.innerHTML = '<div class="muted">Tape un mot ou une expression pour retrouver une page.</div>';
-    return;
-  }
-  const matches = data.pages.filter(p => (p.text || '').toLowerCase().includes(q)).slice(0, 50);
-  if (!matches.length) {
-    results.innerHTML = '<div class="muted">Aucun résultat.</div>';
-    return;
-  }
-  results.innerHTML = matches.map(p => {
-    const txt = (p.text || '').replace(/\s+/g,' ').trim();
-    const idx = txt.toLowerCase().indexOf(q);
-    const excerpt = idx >= 0 ? txt.slice(Math.max(0, idx-55), idx+160) : txt.slice(0, 180);
-    return `<div class="result" data-page="${p.num}"><strong>Page ${p.num}</strong><br><span class="muted">${excerpt.replaceAll('<','&lt;')}</span></div>`;
-  }).join('');
-  results.querySelectorAll('.result').forEach(el => el.addEventListener('click', ()=> goTo(+el.dataset.page)));
+function highlightExcerpt(text, q) {
+  const plain = text.replace(/\s+/g, ' ').trim();
+  const low = plain.toLowerCase();
+  const idx = low.indexOf(q.toLowerCase());
+  if (idx < 0) return escapeHtml(plain.slice(0, 180));
+  const start = Math.max(0, idx - 55);
+  const end = Math.min(plain.length, idx + q.length + 120);
+  const excerpt = plain.slice(start, end);
+  const escaped = escapeHtml(excerpt);
+  const safeQ = q.replace(/[.*+?^${}()|[\]\]/g, '\$&');
+  return escaped.replace(new RegExp(safeQ, 'ig'), m => `<mark>${m}</mark>`);
 }
 
-fetch('pages.json').then(r => r.json()).then(json => {
-  data = json;
-  $('pageCount').textContent = data.pageCount;
-  renderPage();
-  const params = new URLSearchParams(location.search);
-  const p = +params.get('page');
-  if (p) goTo(p);
-});
+function search(q) {
+  const results = $('results');
+  q = q.trim();
+  if (!q) {
+    results.className = 'empty';
+    results.innerHTML = 'Tapez un mot ou une expression pour retrouver rapidement une page.';
+    return;
+  }
+  const matches = data.pages.filter(p => (p.text || '').toLowerCase().includes(q.toLowerCase())).slice(0, 80);
+  if (!matches.length) {
+    results.className = 'empty';
+    results.innerHTML = 'Aucun résultat.';
+    return;
+  }
+  results.className = '';
+  results.innerHTML = matches.map(p => `
+    <div class="result" data-page="${p.num}">
+      <strong>Page ${p.num}</strong><br>
+      <span class="muted">${highlightExcerpt(p.text || '', q)}</span>
+    </div>
+  `).join('');
+  results.querySelectorAll('.result').forEach(el => el.addEventListener('click', () => goTo(+el.dataset.page)));
+}
 
-$('prevBtn').addEventListener('click', ()=> goTo(current-1));
-$('nextBtn').addEventListener('click', ()=> goTo(current+1));
-$('pageInput').addEventListener('change', (e)=> goTo(+e.target.value));
-$('zoomInBtn').addEventListener('click', ()=> { zoom = Math.min(3, +(zoom + 0.1).toFixed(2)); renderPage(); });
-$('zoomOutBtn').addEventListener('click', ()=> { zoom = Math.max(0.5, +(zoom - 0.1).toFixed(2)); renderPage(); });
-$('fitBtn').addEventListener('click', ()=> { zoom = 1; renderPage(); });
-$('searchInput').addEventListener('input', (e)=> search(e.target.value));
+fetch('pages.json')
+  .then(r => { if (!r.ok) throw new Error('pages.json introuvable'); return r.json(); })
+  .then(json => {
+    data = json;
+    $('pageCount').textContent = data.pageCount;
+    const params = new URLSearchParams(location.search);
+    const p = +params.get('page');
+    current = p >= 1 && p <= data.pageCount ? p : 1;
+    renderPage();
+  })
+  .catch(err => {
+    updateStatus('Erreur de chargement');
+    $('results').innerHTML = 'Impossible de charger les données de la visionneuse.';
+    console.error(err);
+  });
 
-document.addEventListener('keydown', (e)=> {
-  if (e.key === 'ArrowRight') goTo(current+1);
-  if (e.key === 'ArrowLeft') goTo(current-1);
+$('prevBtn').addEventListener('click', () => goTo(current - 1));
+$('nextBtn').addEventListener('click', () => goTo(current + 1));
+$('pageInput').addEventListener('change', e => goTo(+e.target.value));
+$('zoomInBtn').addEventListener('click', () => { zoom = Math.min(3, +(zoom + 0.1).toFixed(2)); renderPage(); });
+$('zoomOutBtn').addEventListener('click', () => { zoom = Math.max(0.5, +(zoom - 0.1).toFixed(2)); renderPage(); });
+$('fitBtn').addEventListener('click', () => { zoom = 1; renderPage(); });
+$('searchInput').addEventListener('input', e => search(e.target.value));
+
+document.addEventListener('keydown', e => {
+  if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+  if (e.key === 'ArrowRight') goTo(current + 1);
+  if (e.key === 'ArrowLeft') goTo(current - 1);
   if (e.key === '+' || e.key === '=') { zoom = Math.min(3, +(zoom + 0.1).toFixed(2)); renderPage(); }
   if (e.key === '-') { zoom = Math.max(0.5, +(zoom - 0.1).toFixed(2)); renderPage(); }
 });
