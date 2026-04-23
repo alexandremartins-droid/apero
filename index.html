@@ -273,11 +273,16 @@ function search(q) {
 
 
 (function init(){
-  data = __PAGES_DATA__;
-  $('pageCount').textContent = data.pageCount;
+  const raw = document.getElementById('pages-data')?.textContent || '{}';
+  data = JSON.parse(raw);
+  $('pageCount').textContent = data.pageCount || 0;
   const params = new URLSearchParams(location.search);
   const p = +params.get('page');
   current = p >= 1 && p <= data.pageCount ? p : 1;
+  if (!data.pages || !data.pages.length) {
+    updateStatus('Aucune page disponible');
+    return;
+  }
   renderPage();
 })();
 
